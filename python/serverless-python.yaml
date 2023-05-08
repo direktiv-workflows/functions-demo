@@ -1,0 +1,39 @@
+description: "This is a serverless code execution example for using a Python container"
+
+# This can be tested usng the following curl command to test:
+
+functions:
+- id: python
+  service: python
+  type: knative-namespace
+- id: shell
+  image: gcr.io/direktiv/functions/bash:1.0
+  type: knative-workflow
+
+states:
+- id: run-code
+  type: action
+  action:
+    function: python
+    input:
+      commands:
+      - command: pyenv local 3.8.13
+      - command: python3 -m pip install -r requirements.txt
+      - command: python3 py-tweets.py -b jq(.bearer_token) -t jq(.twitter_searchstring) -m jq(.max_search_returns)
+      - command: ls -la
+      # - command: echo "hello" > out/namespace/output.json
+    files:
+    - key: py-tweets.py
+      scope: workflow
+    - key: requirements.txt
+      scope: workflow
+  transform: jq(.return.python[2])
+  transition: run-shell
+
+- id: run-shell
+  type: action
+  action:
+    function: shell
+    input: 
+      commands:
+      - command: echo jq(.result[2].tweet_id)

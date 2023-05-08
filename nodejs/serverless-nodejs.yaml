@@ -1,0 +1,29 @@
+description: "This is a serverless code execution example for using a NodeJS container"
+
+# This can be tested usng the following curl command to test:
+
+functions:
+- id: node
+  image: gcr.io/direktiv/functions/node:1.0
+  type: knative-workflow
+
+states:
+- id: run-code
+  type: action
+  action:
+    function: node
+    input:
+      commands:
+      - command: npm install needle
+      - command: node nodejs-tweets.js
+        envs: 
+        - name: BEARER_TOKEN
+          value: jq(.bearer_token)  
+        - name: TWITTER_SEARCH_STRING
+          value: jq(.twitter_searchstring)
+        - name: MAX_SEARCH_RESULTS
+          value: jq(.max_search_returns) 
+    files:
+    - key: nodejs-tweets.js
+      scope: workflow
+  transform: jq(.return.node[1].result | fromjson | .)

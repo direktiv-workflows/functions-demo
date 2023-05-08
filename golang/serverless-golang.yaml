@@ -1,0 +1,30 @@
+description: "This is a serverless code execution example for using a Golang container"
+
+# This can be tested usng the following curl command to test:
+
+functions:
+- id: golang
+  image: gcr.io/direktiv/functions/golang:1.0
+  type: knative-workflow
+
+states:
+- id: run-code
+  type: action
+  action:
+    function: golang
+    input:
+      commands:
+      - command: go1.18 mod init go-tweets
+      - command: go1.18 mod tidy
+      - command: go1.18 run go-tweets.go
+        envs: 
+        - name: BEARER_TOKEN
+          value: jq(.bearer_token)  
+        - name: TWITTER_SEARCH_STRING
+          value: jq(.twitter_searchstring)
+        - name: MAX_SEARCH_RESULTS
+          value: jq(.max_search_returns) 
+    files:
+    - key: go-tweets.go
+      scope: workflow
+  #transform: jq(.return.node[1].result | fromjson | .)
