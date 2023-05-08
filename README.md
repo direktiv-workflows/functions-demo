@@ -6,7 +6,8 @@ This repository is an example of how to run Python, NodeJs and Golang code in a 
 
 The workflows in this repository are different implementations of retrieving Tweets for Python, NodeJS and Golang. Each of the folders represent a language and implementation:
  - golang\serverless-golang.yaml: running the go-tweets.go implementation 
- - 
+ - python\serverless-python.yaml: running the py-tweets.go implementation 
+ - nodejs\serverless-nodejs.yaml: running the nodejs-tweets.go implementation 
 
 ## Variables
 
