@@ -35,4 +35,4 @@ The workflows in this repository are different implementations of retrieving Twe
 
 ## External links:
 
- - Blog article: https://blog.direktiv.io/turn-your-code-into-a-serverless-api-748490acd470ß
+ - None
